@@ -13,13 +13,8 @@ client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Repor
 
 var request = new HttpRequest(client);
 var response = await request.SendRequest();
-
-Dictionary<string, ICurrencyStrategy> commandStrategies = new Dictionary<string, ICurrencyStrategy> {
-    {"USD", new ConverterUSD(response)},
-    {"EUR", new ConverterEUR(response)},
-    {"RUB", new ConverterRUB(response)}
-};
-
+// string[] currencies = { "USD", "EUR", "RUB" };
+string[] currencies = response.Select(x => x.Cur_Abbreviation).ToArray();
 // Выбор стоимости
 var price = AnsiConsole.Prompt(
     new TextPrompt<double>("Сколько перевести(в BYN): ")
@@ -31,23 +26,26 @@ var price = AnsiConsole.Prompt(
 var value = AnsiConsole.Prompt(
     new SelectionPrompt<string>()
         .Title("Какую валюту использовать при переводе?")
-        .PageSize(10)
+        .PageSize(4)
         .MoreChoicesText("[grey](Нажимай вверх вниз, чтобы выбрать)[/]")
         .AddChoices(
-            commandStrategies.Keys
+            currencies
         ));
 
-var converter = commandStrategies[value];
 
-var currency = converter.Convert(price);
+
+
+var currencyAbbreviation = value;
+IConverter converter = new Converter(response);
+var result = converter.Convert(price, currencyAbbreviation);
 // Создание таблицы
 var table = new Table();
-table.Border = TableBorder.Rounded;
+table.Border(TableBorder.Rounded);
 
 table.AddColumn("BYN");
 table.AddColumn(value);
 
-table.AddRow($"{price}", $"[green]{currency}[/]");
+table.AddRow($"{price}", $"[indianred1_1]{result}[/]");
 AnsiConsole.Write(table);
 
 
