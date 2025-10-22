@@ -11,7 +11,7 @@ client.DefaultRequestHeaders.Accept.Add(
 client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
 
 
-var request = new HttpRequest(client);
+var request = new HttpRequest(client, "https://api.nbrb.by/exrates/rates?periodicity=0");
 var response = await request.SendRequest();
 // string[] currencies = { "USD", "EUR", "RUB" };
 string[] currencies = response.Select(x => x.Cur_Abbreviation).ToArray();
