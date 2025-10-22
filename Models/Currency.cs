@@ -1,3 +1,5 @@
+namespace DotnetCurrencyConverter.Models;
+
 public record class Currency(
     string Cur_Name,
     string Cur_Abbreviation,
