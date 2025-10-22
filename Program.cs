@@ -48,13 +48,15 @@ HttpClient CreateHttpClient()
             : ValidationResult.Error("Сумма не божет быть меньше или равна 0")));
 
 
+    string[] curs = { "USD", "RUB", "EUR" };
     var currency = AnsiConsole.Prompt(
         new SelectionPrompt<string>()
             .Title("Какую валюту использовать при переводе?")
             .PageSize(4)
             .MoreChoicesText("[grey](Нажимай вверх вниз, чтобы выбрать)[/]")
             .AddChoices(
-                currencies.Select(c => c.Cur_Abbreviation)
+                //currencies.Select(c => c.Cur_Abbreviation).Order()
+                curs
             ));
 
     return (amount, currency);
